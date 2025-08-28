@@ -1,20 +1,19 @@
 "use client";
 
-import AgendaCard from "@/components/AgendaCard";
-import Header from "@/components/Header";
-import PomodoroTimer from "@/components/PomodoroTimer";
-import SummaryCard from "@/components/SummaryCard";
 import { useState, useEffect } from "react";
+import PomodoroTimer from "./PomodoroTimer";
+import SummaryCard from "./SummaryCard";
 
-export default function Home() {
+export default function ClientWrapper() {
   const [completedSessions, setCompletedSessions] = useState(0);
   const [totalFocusedSeconds, setTotalFocusedSeconds] = useState(0);
+
   useEffect(() => {
-    const savedSassions = localStorage.getItem("completedSessions");
+    const savedSessions = localStorage.getItem("completedSessions");
     const savedTime = localStorage.getItem("totalFocusedSeconds");
 
-    if (savedSassions) {
-      setCompletedSessions(JSON.parse(savedSassions));
+    if (savedSessions) {
+      setCompletedSessions(JSON.parse(savedSessions));
     }
     if (savedTime) {
       setTotalFocusedSeconds(JSON.parse(savedTime));
@@ -23,13 +22,13 @@ export default function Home() {
 
   return (
     <>
-      <Header />
       <PomodoroTimer
         setCompletedSessions={setCompletedSessions}
         setTotalFocusedSeconds={setTotalFocusedSeconds}
       />
-      <div className="flex w-full gap-[120px]  justify-items-center items-center ml-1">
-        <AgendaCard />
+      <div className="flex w-full gap-12">
+        {/* O AgendaCard NÃO está aqui */}
+        <div className="flex-1" /> {/* Espaço reservado para o AgendaCard */}
         <SummaryCard
           completedSessions={completedSessions}
           totalFocusedSeconds={totalFocusedSeconds}
