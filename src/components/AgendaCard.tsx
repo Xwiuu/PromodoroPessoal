@@ -68,8 +68,21 @@ export default function AgendaCard() {
           </p>
         ) : (
           events.map((event, index) => (
-            <div key={index} className="border-l-2 border-green-500 pl-4 pt-1">
-              <p className="font-semibold text-green-400">{event.summary}</p>
+            // A borda também muda de cor com base no index
+            <div
+              key={index}
+              className={`border-l-2 ${
+                index === 0 ? "border-green-500" : "border-neutral-500"
+              } pl-4 pt-1`}
+            >
+              {/* O título do evento agora usa uma cor condicional */}
+              <p
+                className={`font-semibold ${
+                  index === 0 ? "text-green-400" : "text-white"
+                }`}
+              >
+                {event.summary}
+              </p>
               <p className="text-sm text-neutral-400 pb-1">
                 • {format(parseISO(event.start.dateTime), "HH:mm")} -{" "}
                 {format(parseISO(event.end.dateTime), "HH:mm")}
