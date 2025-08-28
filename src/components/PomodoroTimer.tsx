@@ -46,9 +46,6 @@ const PomodoroTimer = ({
     } else if (totalSeconds === 0) {
       // ESTA É A LÓGICA QUE SÓ RODA QUANDO O TIMER ZERA
       if (mode === "focus") {
-        const newSessions = (prev: number) => prev + 1;
-        setCompletedSessions(newSessions);
-
         // Usamos um callback para garantir que estamos atualizando o estado mais recente
         setTotalFocusedSeconds((prev) => {
           const newTotal = prev + FOCUS_TIME_SECONDS;
