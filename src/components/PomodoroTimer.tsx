@@ -39,34 +39,45 @@ const PomodoroTimer = ({
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined = undefined;
 
+    // Lógica principal da contagem regressiva
     if (isActive && totalSeconds > 0) {
       interval = setInterval(() => {
         setTotalSeconds((prev) => prev - 1);
       }, 1000);
-    } else if (totalSeconds === 0) {
-      // ESTA É A LÓGICA QUE SÓ RODA QUANDO O TIMER ZERA
+    }
+    // Lógica para o exato momento em que um ciclo termina
+    else if (totalSeconds === 0) {
       if (mode === "focus") {
-        // Usamos um callback para garantir que estamos atualizando o estado mais recente
-        setTotalFocusedSeconds((prev) => {
-          const newTotal = prev + FOCUS_TIME_SECONDS;
-          localStorage.setItem("totalFocusedSeconds", JSON.stringify(newTotal));
-          return newTotal;
-        });
+        // --- Ações quando um ciclo de FOCO termina ---
 
-        // Atualiza as sessões no localStorage
+        // 1. Atualiza o estado das sessões e salva no localStorage
         setCompletedSessions((prev) => {
           const newTotal = prev + 1;
           localStorage.setItem("completedSessions", JSON.stringify(newTotal));
           return newTotal;
         });
 
+        // 2. Atualiza o estado do tempo focado e salva no localStorage
+        setTotalFocusedSeconds((prev) => {
+          const newTotal = prev + FOCUS_TIME_SECONDS;
+          localStorage.setItem("totalFocusedSeconds", JSON.stringify(newTotal));
+          return newTotal;
+        });
+
+        // 3. Salva a data de hoje para o reset diário
+        localStorage.setItem("lastSavedDate", new Date().toDateString());
+
+        // 4. Notifica o usuário
         showNotification(
           "Foco Finalizado!",
           "Bom trabalho! Hora de uma pausa de 10 minutos."
         );
+
+        // 5. Muda para o modo de pausa
         setMode("break");
         setTotalSeconds(BREAK_TIME_SECONDS);
       } else {
+        // --- Ações quando um ciclo de PAUSA termina ---
         showNotification(
           "Pausa Finalizada!",
           "Vamos voltar ao foco por 30 minutos."
@@ -76,6 +87,7 @@ const PomodoroTimer = ({
       }
     }
 
+    // Função de limpeza do intervalo
     return () => {
       if (interval) {
         clearInterval(interval);

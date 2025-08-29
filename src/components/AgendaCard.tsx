@@ -16,22 +16,29 @@ export default function AgendaCard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (status === "authenticated") {
-      setLoading(true);
-      fetch("/api/calendar")
-        .then((res) => res.json())
-        .then((data) => {
-          setEvents(data.slice(0, 2));
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error("Erro ao buscar eventos:", error);
-          setLoading(false);
-        });
-    } else if (status === "unauthenticated") {
-      setEvents([]);
-      setLoading(false);
-    }
+    const fetchEvents = () => {
+      if (status === "authenticated") {
+        fetch("/api/calendar")
+          .then((res) => res.json())
+          .then((data) => {
+            setEvents(data.slice(0, 2));
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.error("Erro ao buscar eventos:", error);
+            setLoading(false);
+          });
+      } else if (status === "unauthenticated") {
+        setEvents([]);
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+
+    const intervalId = setInterval(fetchEvents, 5 * 60 * 1000);
+
+    return () => clearInterval(intervalId);
   }, [status]);
 
   return (
